@@ -8,31 +8,31 @@ Nasz obiekt będzie miał 4 pola: __firstName__, __lastName__, __fullName__ i __
 Zakładamy, że dane są zawsze poprawne i zawsze będą w formacie jednoczłonowego imienia i nazwiska. Przykład niżej:
 
 ```JavaScript
-var mutableTom = new Person('Tom', 'Khowalski');
+var woman = new Person('Tom', 'Khowalski');
 
-mutableTom.firstName; // 'Tom'
-mutableTom.lastName; // 'Khowalski'
-mutableTom.fullName; //'Tom Khowalski
-mutableTom.species; // human
+woman.firstName; // 'Tom'
+woman.lastName; // 'Khowalski'
+woman.fullName; //'Tom Khowalski
+woman.species; // human
 
 /*
  * Zmnieńmy imię ;-)
  */
  
- mutableTom.firstName = 'Mat';
- mutableTom.firstName; // 'Mat'
- mutableTom.lastName; // 'Khowalski'
- mutableTom.fullName; // 'Mat Khowalski' - How to do that !?
- mutableTom.species = 'fish';
- mutableTom.species; // human - No you can't change this propriety.
+woman.firstName = 'Mat';
+woman.firstName; // 'Mat'
+woman.lastName; // 'Khowalski'
+woman.fullName; // 'Mat Khowalski' - How to do that !?
+woman.species = 'fish';
+woman.species; // human - No you can't change this propriety.
  
  /*
   * Zamieńmy pełne imię i nazwisko
   */
   
-  mutableTom.fullName = 'John Stevens';
-  mutableTom.firstName; //John
-  mutableTom.lastName; //Stevens
+woman.fullName = 'John Stevens';
+woman.firstName; //John
+woman.lastName; //Stevens
 ```
 
 ## Jak to zrobić?
@@ -57,78 +57,83 @@ Sprawdźmy zatem, jak rozwiąć zadanie przez zbudowanie konstruktora __Person__
 Jak wynika z dokumentacji _Object.defineProperty_, możemy dodać pole do obiektu i w _descriptor_ ustawić pole __writable__ na _false_, co pozwoli nam uchronić je przed nadpisaniem wartości. Zobaczmy, jak działa to w praktyce:
 
 ```JavaScript
-function Person(first, last) {
+var Person = function (first, last) {
   this.firstName = first;
   this.lastName = last;
-  Object.defineProperty(this, 'species',{
-    writable: false,
-    value: 'human'
-  });
 }
 
-var mutableTom = new Person('Tom', 'Khowalski');
-mutableTom; // Person {firstName: 'Tom', lastName: 'Khowalski', species: 'human'}
+Object.defineProperty(Person, 'species',{
+  writable: false,
+  value: 'human'
+});
+
+var woman = new Person('Tom', 'Khowalski');
+woman; // Person {firstName: 'Tom', lastName: 'Khowalski', species: 'human'}
 
 /*
  * Try to overwrite species
  */
  
-mutableTom.species = 'fish';
-mutableTom.species; // 'human' - We can't change this value.
+woman.species = 'fish';
+woman.species; // 'human' - We can't change this value.
 ```
 
 Właśnie stworzyliśmy pole, którego nie da się nadpisać. Pierwszy sukces za nami. ;-) 
 
+__*Pro tip nigdy nie używaj metody defineProperty wewnątrz konstruktora*__
+
 Pora na drugą część naszego zadania. Musimy zdefiniować pole __fullName__, które zawsze będzie zwracać nam aktualne imię i nazwisko, a w przypadku nadpisania __fullName__ - pola __firstName__ i __lastName__ zaktualizują się. Używając __get__ i __set__, możemy zdefiniować, co będzie działo się z obiektem i co zostanie zwrócone, gdy odczytamy lub nadpiszemy zdefiniowane pole. Rozwiążmy trudniejszą część naszego zadania, by zobaczyć, jak działa to w praktyce:
 
 ```JavaScript
-function Person(first, last) {
+var Person = function (first, last) {
   this.firstName = first;
   this.lastName = last;
-  Object.defineProperty(this, 'species', {
-    writable: false,
-    value: 'human'
-  });
-  Object.defineProperty(this, 'fullName', {
-    get: function () {
-      return this.firstName + ' ' + this.lastName;
-    },
-    set: function (value) {
-      var splitString = value.trim().split(' ');
-
-      if(splitString.length === 2) {
-        this.firstName = splitString[0];
-        this.lastName = splitString[1];
-      }
-    }
-  });
 };
 
-var mutableTom = new Person('Tom', 'Khowalski');
+Object.defineProperty(Person, 'species', {
+  writable: false,
+    value: 'human'
+});
 
-mutableTom.firstName; // 'Tom'
-mutableTom.lastName; // 'Khowalski'
-mutableTom.fullName; //'Tom Khowalski
-mutableTom.species; // human
+Object.defineProperty(Person, 'fullName', {
+  get: function () {
+    return this.firstName + ' ' + this.lastName;
+  },
+  set: function (value) {
+    var splitString = value.trim().split(' ');
+
+    if(splitString.length === 2) {
+      this.firstName = splitString[0];
+      this.lastName = splitString[1];
+    }
+  }
+});
+
+var woman = new Person('Tom', 'Khowalski');
+
+woman.firstName; // 'Tom'
+woman.lastName; // 'Khowalski'
+woman.fullName; //'Tom Khowalski
+woman.species; // human
 
 /*
  * Zmnieńmy imię ;-)
  */
  
- mutableTom.firstName = 'Mat';
- mutableTom.firstName; // 'Mat'
- mutableTom.lastName; // 'Khowalski'
- mutableTom.fullName; // 'Mat Khowalski'
- mutableTom.species = 'fish';
- mutableTom.species; // human - No, you can't change this properity.
+woman.firstName = 'Mat';
+woman.firstName; // 'Mat'
+woman.lastName; // 'Khowalski'
+woman.fullName; // 'Mat Khowalski'
+woman.species = 'fish';
+woman.species; // human - No, you can't change this properity.
  
  /*
   * Zamieńmy pełne imię i nazwisko
   */
   
-  mutableTom.fullName = 'John Stevens';
-  mutableTom.firstName; //John
-  mutableTom.lastName; //Stevens
+woman.fullName = 'John Stevens';
+woman.firstName; //John
+woman.lastName; //Stevens
 ```
 
 ## Wsparcie
