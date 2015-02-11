@@ -8,21 +8,21 @@ Nasz obiekt będzie miał 4 pola: __firstName__, __lastName__, __fullName__ i __
 Zakładamy, że dane są zawsze poprawne i zawsze będą w formacie jednoczłonowego imienia i nazwiska. Przykład niżej:
 
 ```JavaScript
-var woman = new Person('Tom', 'Khowalski');
+var woman = new Person('Jessica', 'Khowalski');
 
-woman.firstName; // 'Tom'
+woman.firstName; // 'Jessica'
 woman.lastName; // 'Khowalski'
-woman.fullName; //'Tom Khowalski
+woman.fullName; //'Jessica Khowalski
 woman.species; // human
 
 /*
  * Zmnieńmy imię ;-)
  */
  
-woman.firstName = 'Mat';
-woman.firstName; // 'Mat'
+woman.firstName = 'Fiona';
+woman.firstName; // 'Fiona'
 woman.lastName; // 'Khowalski'
-woman.fullName; // 'Mat Khowalski' - How to do that !?
+woman.fullName; // 'Fiona Khowalski' - How to do that !?
 woman.species = 'fish';
 woman.species; // human - No you can't change this propriety.
  
@@ -30,9 +30,9 @@ woman.species; // human - No you can't change this propriety.
   * Zamieńmy pełne imię i nazwisko
   */
   
-woman.fullName = 'John Stevens';
-woman.firstName; //John
-woman.lastName; //Stevens
+woman.fullName = 'Joana Stevens';
+woman.firstName; // 'Joana'
+woman.lastName; // 'Stevens'
 ```
 
 ## Jak to zrobić?
@@ -67,8 +67,8 @@ Object.defineProperty(Person, 'species',{
   value: 'human'
 });
 
-var woman = new Person('Tom', 'Khowalski');
-woman; // Person {firstName: 'Tom', lastName: 'Khowalski', species: 'human'}
+var woman = new Person('Jessica', 'Khowalski');
+woman; // Person {firstName: 'Jessica', lastName: 'Khowalski', species: 'human'}
 
 /*
  * Try to overwrite species
@@ -111,29 +111,29 @@ Object.defineProperty(Person, 'fullName', {
 
 var woman = new Person('Tom', 'Khowalski');
 
-woman.firstName; // 'Tom'
+woman.firstName; // 'Jessica'
 woman.lastName; // 'Khowalski'
-woman.fullName; //'Tom Khowalski
-woman.species; // human
+woman.fullName; //'Jessica Khowalski
+woman.species; // 'human'
 
 /*
  * Zmnieńmy imię ;-)
  */
  
-woman.firstName = 'Mat';
-woman.firstName; // 'Mat'
+woman.firstName = 'Fiona';
+woman.firstName; // 'Fiona'
 woman.lastName; // 'Khowalski'
 woman.fullName; // 'Mat Khowalski'
 woman.species = 'fish';
-woman.species; // human - No, you can't change this properity.
+woman.species; // 'human' - No, you can't change this properity.
  
  /*
   * Zamieńmy pełne imię i nazwisko
   */
   
-woman.fullName = 'John Stevens';
-woman.firstName; //John
-woman.lastName; //Stevens
+woman.fullName = 'Joana Stevens';
+woman.firstName; // 'Joana'
+woman.lastName; // 'Stevens'
 ```
 
 ## Wsparcie
